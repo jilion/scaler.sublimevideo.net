@@ -5,7 +5,7 @@ class NewRelicWrapper
   end
 
   def throughput
-    application.threshold_values.detect { |a| a.name == 'Throughput' }.metric_value
+    @throughput ||= application.threshold_values.detect { |a| a.name == 'Throughput' }.metric_value
   end
 
   def application

@@ -12,9 +12,7 @@ module Scaler
     heroku = HerokuWrapper.new('sv-stats', range: 1..10)
     sidekiq = SidekiqWrapper.new('stats', queues: %w[stats stats-slow])
     historic = sidekiq.historic(10)
-
     p "Stats historic: #{historic}"
-
     if historic.sum == 0
       heroku.ps_decrement(:worker)
     elsif historic.sum > 2000 && historic[-1] > historic[-2]
@@ -25,9 +23,7 @@ module Scaler
   def data_webs
     new_relic = NewRelicWrapper.new(1898958) # data2.sv.app
     heroku = HerokuWrapper.new('sv-data2', range: 2..5)
-
-    p new_relic.throughput
-
+    p "Data rpm: #{new_relic.throughput}"
     heroku.ps_scale(:web, (new_relic.throughput / 2000.0).ceil)
   end
 end
