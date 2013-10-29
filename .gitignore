@@ -16,5 +16,5 @@ tmp
 _yardoc
 doc/
 
-!.bundle/config
 .env
+!.bundle/config
