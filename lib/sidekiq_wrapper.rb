@@ -7,7 +7,7 @@ class SidekiqWrapper
   end
 
   def size
-    queues.map { |queue| Sidekiq::Queue.new(queue).size }.sum
+    @size ||= queues.map { |queue| Sidekiq::Queue.new(queue).size }.sum
   end
 
   def historic(n)
