@@ -20,6 +20,12 @@ module Scaler
     end
   end
 
+  def my_workers
+    heroku = HerokuWrapper.new('sv-stats', range: 1..3)
+    sidekiq = SidekiqWrapper.new('stats', queues: %w[my my-high my-loader my-low my-mailer])
+    heroku.ps_scale(:worker, sidekiq.size > 100 ? 3 : 1)
+  end
+
   def data_webs
     new_relic = NewRelicWrapper.new(1898958) # data2.sv.app
     heroku = HerokuWrapper.new('sv-data2', range: 2..5)
@@ -30,5 +36,6 @@ end
 
 module Clockwork
   every(30.seconds, 'Stats workers') { Scaler.stats_workers }
+  every(15.seconds, 'My workers') { Scaler.my_workers }
   every(30.seconds, 'Data webs') { Scaler.data_webs }
 end
