@@ -6,7 +6,7 @@ class HerokuWrapper
   end
 
   def ps_n(type)
-    @client.get_ps(@app).body.count {|ps| ps['process'].match /#{type}\.\d?/ }
+    @client.get_ps(@app).body.count {|ps| ps['process'].match /^#{type}\.\d?$/ }
   end
 
   def ps_increment(type)
