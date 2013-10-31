@@ -32,10 +32,17 @@ module Scaler
     p "Data rpm: #{new_relic.throughput}"
     heroku.ps_scale(:web, (new_relic.throughput / 2000.0).ceil)
   end
+
+  def scout_workers
+    heroku = HerokuWrapper.new('sv-scout')
+    sidekiq = SidekiqWrapper.new('scout', queues: %w[scout])
+    heroku.ps_scale(:worker, sidekiq.size > 1 ? 1 : 0)
+  end
 end
 
 module Clockwork
   every(30.seconds, 'Stats workers') { Scaler.stats_workers }
   every(15.seconds, 'My workers') { Scaler.my_workers }
   every(30.seconds, 'Data webs') { Scaler.data_webs }
+  every(30.seconds, 'Scout workers') { Scaler.scout_workers }
 end
