@@ -9,7 +9,7 @@ module Scaler
   extend self
 
   def stats_workers
-    heroku = HerokuWrapper.new('sv-stats', range: 1..10)
+    heroku = HerokuWrapper.new('sv-stats', range: 1..12)
     sidekiq = SidekiqWrapper.new('stats', queues: %w[stats stats-slow])
     historic = sidekiq.historic(5)
     p "Stats historic: #{historic}"
