@@ -8,7 +8,8 @@ gem 'sidekiq'
 gem 'newrelic_api'
 gem 'activeresource'
 gem 'heroku-api'
-gem 'tinder' # Campfire
+gem 'librato-metrics'
+# gem 'tinder' # Campfire
 
 group :development do
   gem 'foreman'

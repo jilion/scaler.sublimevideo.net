@@ -1,6 +1,7 @@
 require 'bundler/setup'
 Bundler.require
 
+require './lib/librato_wrapper'
 require './lib/heroku_wrapper'
 require './lib/sidekiq_wrapper'
 require './lib/new_relic_wrapper'
@@ -12,7 +13,6 @@ module Scaler
     heroku = HerokuWrapper.new('sv-stats', range: 1..12)
     sidekiq = SidekiqWrapper.new('stats', queues: %w[stats stats-slow])
     historic = sidekiq.historic(5)
-    p "Stats historic: #{historic}"
     if historic.sum == 0
       heroku.ps_decrement(:worker)
     elsif historic.sum > 2000 && historic[-1] > historic[-2]
@@ -29,7 +29,6 @@ module Scaler
   def data_webs
     new_relic = NewRelicWrapper.new(1898958) # data2.sv.app
     heroku = HerokuWrapper.new('sv-data2', range: 2..5)
-    p "Data rpm: #{new_relic.throughput}"
     heroku.ps_scale(:web, (new_relic.throughput / 2000.0).ceil)
   end
 
@@ -41,8 +40,9 @@ module Scaler
 end
 
 module Clockwork
-  every(30.seconds, 'Stats workers') { Scaler.stats_workers }
-  every(15.seconds, 'My workers') { Scaler.my_workers }
-  every(30.seconds, 'Data webs') { Scaler.data_webs }
-  every(30.seconds, 'Scout workers') { Scaler.scout_workers }
+  every(30.seconds, 'Stats workers')   { Scaler.stats_workers }
+  every(15.seconds, 'My workers')      { Scaler.my_workers }
+  every(30.seconds, 'Data webs')       { Scaler.data_webs }
+  every(30.seconds, 'Scout workers')   { Scaler.scout_workers }
+  every(1.minute,   'Librato Metrics') { LibratoWrapper.instance.submit }
 end

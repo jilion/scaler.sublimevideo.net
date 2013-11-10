@@ -18,10 +18,17 @@ class HerokuWrapper
   end
 
   def ps_scale(type, n)
+    _report_librato_metrics(type, n)
     return if n == ps_n(type)
     return unless @range.include?(n)
 
     @client.post_ps_scale(@app, type , n)
     puts "Scale #{@app} #{type} dynos to #{n}."
+  end
+
+  private
+
+  def _report_librato_metrics(type, n)
+    LibratoWrapper.instance.add 'scaler.dynos' => { source: "#{app}.#{type}", value: n }
   end
 end
