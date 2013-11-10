@@ -29,6 +29,6 @@ class HerokuWrapper
   private
 
   def _report_librato_metrics(type, n)
-    LibratoWrapper.instance.add 'scaler.dynos' => { source: "#{app}.#{type}", value: n }
+    LibratoWrapper.instance.add 'scaler.dynos' => { source: "#{@app}.#{type}", value: n }
   end
 end

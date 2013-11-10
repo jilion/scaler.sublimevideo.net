@@ -3,11 +3,11 @@ require 'singleton'
 class LibratoWrapper
   include Singleton
 
-  def initialize
+  def initialize
     Librato::Metrics.authenticate ENV['LIBRATO_USER'], ENV['LIBRATO_TOKEN']
     @queue = Librato::Metrics::Queue.new
-  end
-   
+  end
+
   def add(*args)
     @queue.add *args
   end
