@@ -13,11 +13,13 @@ module Scaler
     heroku = HerokuWrapper.new('sv-stats', range: 1..12)
     sidekiq = SidekiqWrapper.new('stats', queues: %w[stats stats-slow])
     historic = sidekiq.historic(5)
+    n = heroku.ps_n(:worker)
     if historic.sum == 0
-      heroku.ps_decrement(:worker)
+      n -= 1
     elsif historic.sum > 2000 && historic[-1] > historic[-2]
-      heroku.ps_increment(:worker)
+      n += 1
     end
+    heroku.ps_scale(:worker, n)
   end
 
   def my_workers
