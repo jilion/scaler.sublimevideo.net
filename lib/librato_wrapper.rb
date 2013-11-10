@@ -13,6 +13,6 @@ class LibratoWrapper
   end
 
   def submit
-    queue.submit
+    @queue.submit
   end
 end
