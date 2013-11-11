@@ -16,7 +16,7 @@ module Scaler
     n = heroku.ps_n(:worker)
     if historic.sum == 0
       n -= 1
-    elsif historic.sum > 2000 && historic[-1] > historic[-2]
+    elsif historic.sum > 2500 && historic[-1] > historic[-2]
       n += 1
     end
     heroku.ps_scale(:worker, n)
