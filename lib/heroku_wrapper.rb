@@ -1,4 +1,6 @@
 class HerokuWrapper
+  attr_reader :range
+
   def initialize(app, range: 0..1)
     @client = Heroku::API.new(api_key: ENV['HEROKU_API_KEY'])
     @app = app

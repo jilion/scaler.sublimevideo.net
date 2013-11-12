@@ -25,7 +25,7 @@ module Scaler
   def my_workers
     heroku = HerokuWrapper.new('sv-my', range: 1..5)
     sidekiq = SidekiqWrapper.new('stats', queues: %w[my my-high my-loader my-low my-mailer])
-    heroku.ps_scale(:worker, sidekiq.size > 100 ? 3 : 1)
+    heroku.ps_scale(:worker, sidekiq.size > 100 ? heroku.range.max : heroku.range.min)
   end
 
   def data_webs
