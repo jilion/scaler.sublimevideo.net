@@ -31,7 +31,7 @@ module Scaler
   def data_webs
     new_relic = NewRelicWrapper.new(1898958) # data2.sv.app
     heroku = HerokuWrapper.new('sv-data2', range: 2..5)
-    heroku.ps_scale(:web, (new_relic.throughput / 2000.0).ceil)
+    heroku.ps_scale(:web, (new_relic.throughput / 2500.0).ceil)
   end
 
   def scout_workers
