@@ -45,6 +45,6 @@ module Clockwork
   every(30.seconds, 'Stats workers')   { Scaler.stats_workers }
   every(15.seconds, 'My workers')      { Scaler.my_workers }
   every(30.seconds, 'Data webs')       { Scaler.data_webs }
-  every(30.seconds, 'Scout workers')   { Scaler.scout_workers }
+  # every(30.seconds, 'Scout workers')   { Scaler.scout_workers }
   every(1.minute,   'Librato Metrics') { LibratoWrapper.instance.submit }
 end
