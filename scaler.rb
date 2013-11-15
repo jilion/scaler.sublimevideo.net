@@ -37,13 +37,13 @@ module Scaler
   def scout_workers
     heroku = HerokuWrapper.new('sv-scout')
     sidekiq = SidekiqWrapper.new('scout', queues: %w[scout])
-    heroku.ps_scale(:worker, sidekiq.size > 1 ? 1 : 0)
+    heroku.ps_scale(:worker, sidekiq.size > 0 ? 1 : 0)
   end
 
   def www_workers
     heroku = HerokuWrapper.new('sv-www')
     sidekiq = SidekiqWrapper.new('www', queues: %w[www])
-    heroku.ps_scale(:worker, sidekiq.size > 1 ? 1 : 0)
+    heroku.ps_scale(:worker, sidekiq.size > 0 ? 1 : 0)
   end
 end
 
