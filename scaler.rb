@@ -39,6 +39,12 @@ module Scaler
     sidekiq = SidekiqWrapper.new('scout', queues: %w[scout])
     heroku.ps_scale(:worker, sidekiq.size > 1 ? 1 : 0)
   end
+
+  def www_workers
+    heroku = HerokuWrapper.new('sv-www')
+    sidekiq = SidekiqWrapper.new('www', queues: %w[www])
+    heroku.ps_scale(:worker, sidekiq.size > 1 ? 1 : 0)
+  end
 end
 
 module Clockwork
@@ -46,5 +52,6 @@ module Clockwork
   every(15.seconds, 'My workers')      { Scaler.my_workers }
   every(30.seconds, 'Data webs')       { Scaler.data_webs }
   every(30.seconds, 'Scout workers')   { Scaler.scout_workers }
+  every(30.seconds, 'Www workers')     { Scaler.www_workers }
   every(1.minute,   'Librato Metrics') { LibratoWrapper.instance.submit }
 end
